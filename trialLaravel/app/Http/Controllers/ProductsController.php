@@ -15,11 +15,11 @@ class ProductsController extends Controller
      */
     public function index()
     {
-       $product = \App\Product::all();
-    //    $product = DB::table('products') -> get();
-       dump($product);
-    //    return view('product.index');
-       return view('product.index', ['product' => $product]);
+    
+       $product = Product::all();
+    //    dump($product);
+    //    die;
+       return view('product.index', compact('product'));
     }
 
     /**
@@ -29,7 +29,7 @@ class ProductsController extends Controller
      */
     public function create()
     {
-        //
+        return view('product.create');
     }
 
     /**
@@ -40,7 +40,14 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|max:255',
+            'product_type' => 'required',
+            'price' => 'required'
+        ]);
+        Product::create($request->all());   
+        
+       return redirect('product')->with ('status', 'Product added succesfully');
     }
 
     /**
@@ -49,9 +56,10 @@ class ProductsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Product $product)
     {
         //
+        return view('product.show', compact('product'));
     }
 
     /**
@@ -60,9 +68,9 @@ class ProductsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Product $product)
     {
-        //
+        return view('product.edit', compact('product'));
     }
 
     /**
@@ -72,9 +80,15 @@ class ProductsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request,Product $product)
     {
-        //
+        Product::where('id', $product->id)
+        ->update([
+            'name' => $request->name,
+            'product_type' => $request->product_type,
+            'price' => $request->price
+        ]);
+        return redirect('product')->with ('status', 'Product edited succesfully');
     }
 
     /**
@@ -83,8 +97,10 @@ class ProductsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Product $product)
     {
         //
+        Product::destroy($product->id);
+        return redirect('product')->with ('status', 'Product deleted succesfully');
     }
 }

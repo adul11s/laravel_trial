@@ -16,4 +16,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'PagesController@home'); 
 Route::get('/about', 'PagesController@about');
+
+// product
+
 Route::get('/product', 'ProductsController@index');
+Route::get('/product/create', 'ProductsController@create');
+Route::get('/product/{product}', 'ProductsController@show');
+Route::post('/product', 'ProductsController@store');
+Route::delete('/product/{product}', 'ProductsController@destroy');
+Route::get('/product/{product}/edit', 'ProductsController@edit');
+Route::patch('/product/{product}', 'ProductsController@update');
